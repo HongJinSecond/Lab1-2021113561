@@ -6,7 +6,7 @@
  * @email: 756547077@qq.com
  * @Date: 2024-05-11 14:57:38
  * @LastEditors: 陈左维2021113561
- * @LastEditTime: 2024-05-13 16:45:58
+ * @LastEditTime: 2024-05-14 19:21:55
  */
 
 import java.io.BufferedReader;
@@ -164,7 +164,7 @@ public class MyGraphic {
             }
             for (GraphicEdge edge : graph.get(current)) {
                 int newDistance = distance.get(current) + edge.getWeight();
-                //异常捕获防止获取null时发生报错
+                // 异常捕获防止获取null时发生报错
                 try {
                     if (newDistance < distance.get(edge.getEnd())) {
                         distance.put(edge.getEnd(), newDistance);
@@ -203,12 +203,18 @@ public class MyGraphic {
 
         // 邻边
         List<GraphicEdge> edges = new ArrayList<>();
-        for (GraphicEdge e : graph.get(randomWalkNode)) {
-            // 判断哪些邻边能够被走通，加入到列表中
-            if (e.canWalk()) {
-                edges.add(e);
+        // 防止空指针异常
+        try {
+            for (GraphicEdge e : graph.get(randomWalkNode)) {
+                // 判断哪些邻边能够被走通，加入到列表中
+                if (e.canWalk()) {
+                    edges.add(e);
+                }
             }
+        } catch (NullPointerException E) {
+
         }
+
         // 如果邻边都不能走则表示随机游走中止
         if (edges.size() == 0) {
             return null;
@@ -230,17 +236,18 @@ public class MyGraphic {
     }
 
     /**
-     * @msg 查询两个词之间的桥接词，并且返回一个列表（如果查询失败返回空值）
+     * @msg 查询两个词之间的桥接词，并且返回一个列表
      * @param {String} start 开始的词
      * @param {String} next 下一个词
      * @return {List<String>} 返回start->List<String>->next中的List<String>
      */
     public List<String> findBridgeWorlds(String start, String next) {
+        List<String> words = new ArrayList<>();
         // 没有找到对应的词(开始符号)
         if (!graph.containsKey(start)) {
-            return null;
+            return words;
         }
-        List<String> words = new ArrayList<>();
+
         // 找到开始符号之后
         for (GraphicEdge e : graph.get(start)) {
             // 遍历开始符号连接的所有边
@@ -250,11 +257,6 @@ public class MyGraphic {
                     words.add(e2.getStart());
                 }
             }
-        }
-        // 表示一条边也没找到 返回Null
-        if (words.size() == 0) {
-            return null;
-
         }
         return words;
     }
