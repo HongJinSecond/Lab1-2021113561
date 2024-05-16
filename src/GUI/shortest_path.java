@@ -73,8 +73,6 @@ public class shortest_path extends JFrame {
                 System.out.println("开始节点为：" + start);
                 System.out.println("结束节点为：" + end);
                 // 这里获取到开始节点与结束节点的信息了，调用获取结果存入result即可
-
-                shortest_path.this.result = start + "到" + end;
                 jTextField1.setText("");
                 jTextField2.setText("");
                 String result = d.findMinSource(start, end);
