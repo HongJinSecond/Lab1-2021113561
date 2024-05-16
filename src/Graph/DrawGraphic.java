@@ -120,7 +120,7 @@ public class DrawGraphic {
             String s = GenerateDotCommand();
             for (String e : source) {
                 System.out.println(e);
-                DotCommandBuilder.append(e + " [color=\"lightblue\"];");
+                DotCommandBuilder.append(e + " [color=\"red\"];");
             }
             DotCommandBuilder.append(s);
             generateGraphImage(DotCommandBuilder.toString(), "src/tmp_s");
