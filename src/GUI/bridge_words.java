@@ -23,6 +23,10 @@ public class bridge_words extends JFrame {
     public bridge_words(String title, boolean ifBack, DrawGraphic d) {
         super(title);
         this.d = d;
+
+        //设置字体
+        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+
         // 设置三个区域的Panel
         JPanel jPanel_NORTH = new JPanel();
         JPanel jPanel_CENTER = new JPanel();
@@ -34,7 +38,9 @@ public class bridge_words extends JFrame {
 
         if (ifBack) {
             JButton jButton = new JButton("BACK");
+            jButton.setFont(font);
             JPanel jPanel = new JPanel();
+            jPanel.setLayout(new BorderLayout());
 
             jButton.addActionListener(new ActionListener() {
                 @Override
@@ -43,8 +49,8 @@ public class bridge_words extends JFrame {
                     mainFrame.setVisible(true);
                 }
             });
-
-            jPanel_NORTH.add(jButton, BorderLayout.WEST);
+            jPanel.add(jButton,BorderLayout.NORTH);
+            jPanel_NORTH.add(jPanel, BorderLayout.WEST);
             this.add(jPanel_NORTH, BorderLayout.NORTH);
         }
 
@@ -54,6 +60,8 @@ public class bridge_words extends JFrame {
         // 设置节点输入框
         JTextField jTextField1 = new JTextField(20);
         JTextField jTextField2 = new JTextField(20);
+        jTextField1.setFont(font);
+        jTextField2.setFont(font);
         jPanel_CENTER.add(jTextField1, BorderLayout.WEST);
         jPanel_CENTER.add(jTextField2, BorderLayout.CENTER);
 
@@ -62,12 +70,14 @@ public class bridge_words extends JFrame {
         textLabel.setText("");
         textLabel.setSize(80, 40);
         textLabel.setText(this.result);
+        textLabel.setFont(font);
         System.out.println(this.result);
         jPanel_SOUTH.setPreferredSize(new Dimension(0, 100));
         jPanel_SOUTH.add(textLabel, BorderLayout.CENTER);
 
         // 设置开始按钮
         JButton jButton = new JButton("Start Searching");
+        jButton.setFont(font);
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

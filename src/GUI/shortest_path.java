@@ -21,6 +21,10 @@ public class shortest_path extends JFrame {
     public shortest_path(String title, boolean ifBack, DrawGraphic d) {
         super(title);
         this.d = d;
+
+        //设置字体
+        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+
         // 设置三个区域的Panel
         JPanel jPanel_NORTH = new JPanel();
         JPanel jPanel_CENTER = new JPanel();
@@ -32,6 +36,7 @@ public class shortest_path extends JFrame {
         this.setLayout(new BorderLayout());
         if (ifBack) {
             JButton jButton1 = new JButton("BACK");
+            jButton1.setFont(font);
             JPanel jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
 
@@ -42,7 +47,8 @@ public class shortest_path extends JFrame {
                     mainFrame.setVisible(true);
                 }
             });
-            jPanel_NORTH.add(jButton1, BorderLayout.WEST);
+            jPanel.add(jButton1,BorderLayout.NORTH);
+            jPanel_NORTH.add(jPanel, BorderLayout.WEST);
         }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,6 +57,9 @@ public class shortest_path extends JFrame {
         // 设置节点输入框
         JTextField jTextField1 = new JTextField(20);
         JTextField jTextField2 = new JTextField(20);
+        jTextField1.setFont(font);
+        jTextField2.setFont(font);
+        jTextField2.setPreferredSize(new Dimension(150,100));
         jPanel_CENTER.add(jTextField1, BorderLayout.WEST);
         jPanel_CENTER.add(jTextField2, BorderLayout.CENTER);
 
@@ -58,6 +67,7 @@ public class shortest_path extends JFrame {
         textLabel = new JLabel();
         textLabel.setText(" ");
         textLabel.setText(this.result);
+        textLabel.setFont(font);
         System.out.println(this.result);
         jPanel_SOUTH.add(textLabel, BorderLayout.CENTER);
         jPanel_SOUTH.setPreferredSize(new Dimension(0, 100));
@@ -65,6 +75,7 @@ public class shortest_path extends JFrame {
 
         // 设置开始按钮
         JButton jButton = new JButton("Start Searching");
+        jButton.setFont(font);
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -73,6 +84,8 @@ public class shortest_path extends JFrame {
                 System.out.println("开始节点为：" + start);
                 System.out.println("结束节点为：" + end);
                 // 这里获取到开始节点与结束节点的信息了，调用获取结果存入result即可
+
+                shortest_path.this.result = start + "到" + end;
                 jTextField1.setText("");
                 jTextField2.setText("");
                 String result = d.findMinSource(start, end);
@@ -109,7 +122,7 @@ public class shortest_path extends JFrame {
         try {
             BufferedImage originalImage = ImageIO.read(new File("src/tmp.jpg"));
 
-            // 缩放图片尺寸为400*300
+            // 缩放图片尺寸
             int scaledWidth = 800;
             int scaledHeight = 600;
             BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);

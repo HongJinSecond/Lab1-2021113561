@@ -45,6 +45,10 @@ public class GUI {
     }
 
     public void init() {
+
+        //设置字体
+        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+
         // 读取的文件路径为text_path
         // 获取核心绘图对象
         // 设置第二个跳转页面frame2
@@ -52,7 +56,8 @@ public class GUI {
         frame2.setVisible(false);
         frame2.setMainFrame(mainFrame);
         JPanel frame2_panel = new JPanel();
-        JButton button = new JButton("shortest_path");
+        JButton button = new JButton("shortest path");
+        button.setFont(font);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,7 +73,8 @@ public class GUI {
         frame3.setMainFrame(mainFrame);
 
         JPanel frame3_panel = new JPanel();
-        JButton button3 = new JButton("bridge_words");
+        JButton button3 = new JButton("bridge words");
+        button3.setFont(font);
         button3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -84,7 +90,8 @@ public class GUI {
         frame4.setMainFrame(mainFrame);
 
         JPanel frame4_panel = new JPanel();
-        JButton button4 = new JButton("add_bridge_word");
+        JButton button4 = new JButton("add bridge word");
+        button4.setFont(font);
         button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,7 +106,8 @@ public class GUI {
         frame5.setMainFrame(mainFrame);
 
         JPanel frame5_panel = new JPanel();
-        JButton button5 = new JButton("random_wonder");
+        JButton button5 = new JButton("random wonder");
+        button5.setFont(font);
         button5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

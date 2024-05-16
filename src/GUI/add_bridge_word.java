@@ -27,6 +27,10 @@ public class add_bridge_word extends JFrame {
     public add_bridge_word(String title, boolean ifBack, DrawGraphic d) {
         super(title);
         this.d = d;
+
+        //设置字体
+        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+
         // 设置三个区域的Panel
         JPanel jPanel_NORTH = new JPanel();
         JPanel jPanel_CENTER = new JPanel();
@@ -38,7 +42,9 @@ public class add_bridge_word extends JFrame {
 
         if (ifBack) {
             JButton jButton = new JButton("BACK");
+            jButton.setFont(font);
             JPanel jPanel = new JPanel();
+            jPanel.setLayout(new BorderLayout());
 
             jButton.addActionListener(new ActionListener() {
                 @Override
@@ -47,8 +53,8 @@ public class add_bridge_word extends JFrame {
                     mainFrame.setVisible(true);
                 }
             });
-
-            jPanel_NORTH.add(jButton, BorderLayout.WEST);
+            jPanel.add(jButton,BorderLayout.NORTH);
+            jPanel_NORTH.add(jPanel, BorderLayout.WEST);
         }
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,6 +62,8 @@ public class add_bridge_word extends JFrame {
 
         // 设置输入框
         JTextField jTextField1 = new JTextField(20);
+        jTextField1.setFont(font);
+        jTextField1.setPreferredSize(new Dimension(400,200));
         jPanel_CENTER.add(jTextField1, BorderLayout.CENTER);
 
         // 插入一个展示结果的文本Label
@@ -63,11 +71,13 @@ public class add_bridge_word extends JFrame {
         textLabel.setText(" ");
         textLabel.setSize(80, 40);
         textLabel.setText(this.result);
+        textLabel.setFont(font);
         System.out.println(this.result);
         jPanel_SOUTH.add(textLabel, BorderLayout.CENTER);
 
         // 设置开始按钮
-        JButton jButton = new JButton("Start Searching");
+        JButton jButton = new JButton("Start");
+        jButton.setFont(font);
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,7 +90,6 @@ public class add_bridge_word extends JFrame {
                 if (add_bridge_word.this.result != null) {
                     textLabel.setText(add_bridge_word.this.result);
                 }
-
             }
         });
         jPanel_CENTER.add(jButton, BorderLayout.EAST);

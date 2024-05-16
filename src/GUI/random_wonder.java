@@ -24,6 +24,10 @@ public class random_wonder extends JFrame {
         // 设置标题
         super(title);
         this.d = d;
+
+        //设置字体
+        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+
         // 设置三个区域的Panel
         JPanel jPanel_NORTH = new JPanel();
         JPanel jPanel_CENTER = new JPanel();
@@ -36,6 +40,7 @@ public class random_wonder extends JFrame {
         // 设置一个返回到mainFrame的按钮
         if (ifBack) {
             JButton jButton = new JButton("BACK");
+            jButton.setFont(font);
             JPanel jPanel = new JPanel();
 
             jButton.addActionListener(new ActionListener() {
@@ -54,17 +59,19 @@ public class random_wonder extends JFrame {
 
         // 插入一个展示结果的文本Label
         textLabel = new JLabel();
+        textLabel.setFont(font);
         textLabel.setSize(80, 40);
         textLabel.setText(this.result);
         System.out.println(this.result);
-        textLabel.setPreferredSize(new Dimension(0, 100));
-        jPanel_CENTER.add(textLabel, BorderLayout.SOUTH);
+        textLabel.setPreferredSize(new Dimension(0, 150));
+        jPanel_SOUTH.add(textLabel, BorderLayout.CENTER);
 
         // 以及存储所有结果的stringBuilder
         StringBuilder stringBuilder = new StringBuilder();
 
         // 设置下一步按钮
         JButton jButton = new JButton("Start Searching");
+        jButton.setFont(font);
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -84,10 +91,11 @@ public class random_wonder extends JFrame {
 
             }
         });
-        jPanel_SOUTH.add(jButton, BorderLayout.WEST);
+        jPanel_CENTER.add(jButton, BorderLayout.WEST);
 
         // 设置写入文件按钮
         JButton jButton2 = new JButton("save as file");
+        jButton2.setFont(font);
         jButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,7 +109,7 @@ public class random_wonder extends JFrame {
                 }
             }
         });
-        jPanel_SOUTH.add(jButton2, BorderLayout.EAST);
+        jPanel_CENTER.add(jButton2, BorderLayout.EAST);
 
         // 插入一张图片
         try {
