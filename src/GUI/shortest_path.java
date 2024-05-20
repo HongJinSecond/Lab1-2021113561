@@ -21,7 +21,10 @@ public class shortest_path extends JFrame {
     JFrame mainFrame;
     String result;
     JLabel textLabel;
+
     private DrawGraphic d;
+
+    List<String> list_result;
 
     public shortest_path(String title, boolean ifBack, DrawGraphic d) {
         super(title);
@@ -79,6 +82,7 @@ public class shortest_path extends JFrame {
         // 设置开始按钮
         JButton jButton = new JButton("Start Searching");
         jButton.setFont(font);
+        JComboBox<String> comboBox = new JComboBox<>();
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,13 +118,14 @@ public class shortest_path extends JFrame {
                 }
                 // 如果end为空
                 else {
+
                     textLabel.setText("");
-                    List<String> list_result = shortest_path.this.d.calcShortestPath(start);
+                    shortest_path.this.list_result = shortest_path.this.d.calcShortestPath(start);
                     List<String> list_end = new ArrayList<>();
-                    for (String s : list_result) {
+                    for (String s : shortest_path.this.list_result) {
                         list_end.add(s.split(":")[0].split(" ")[1]);
                     }
-                    JComboBox<String> comboBox = new JComboBox<>();
+                    comboBox.removeAllItems();
                     for (String string : list_end) {
                         comboBox.addItem(string);
                     }
@@ -132,8 +137,8 @@ public class shortest_path extends JFrame {
                                 // 检查哪个选项被选中
                                 String selectedItem = (String) comboBox.getSelectedItem();
                                 System.out.println("Selected item: " + selectedItem);
-                                for (String i : list_result) {
-                                    if (i.contains(selectedItem)) {
+                                for (String i : shortest_path.this.list_result) {
+                                    if (i.split(":")[0].split(" ")[1].equals(selectedItem)) {
                                         textLabel.setText(i);
                                         try {
                                             BufferedImage originalImage = ImageIO
