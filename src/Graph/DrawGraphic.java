@@ -43,9 +43,9 @@ public class DrawGraphic {
                     if (data.length == 1) {
                         List<String> outs = d.calcShortestPath(data[0]);
                         for (String s : outs) {
-                            //获得关键词
+                            // 获得关键词
                             String target = s.split(":")[0].split(" ")[1];
-                            System.out.println("现在到"+target+"的路径是:\n"+s);
+                            System.out.println("现在到" + target + "的路径是:\n" + s);
                         }
                     } else {
                         System.out.println(d.calcShortestPath(data[0], data[1]));
@@ -127,9 +127,12 @@ public class DrawGraphic {
         if (pre == null) {
             return "Fail to find the min source";
         } else {
-            List<String> source = findPreSource(start, end, pre);
+            List<String> source = findPreSource(end, pre);
+            if (source.size() == 1) {
+                return "Fail to find the min source";
+            }
             StringBuilder trace = new StringBuilder();
-            trace.append("To "+end+":");
+            trace.append("To " + end + ":");
             StringBuilder DotCommandBuilder = new StringBuilder();
             String s = GenerateDotCommand();
             for (String e : source) {
@@ -137,7 +140,7 @@ public class DrawGraphic {
                 trace.append(e + "->");
             }
             DotCommandBuilder.append(s);
-            System.out.println("--------现在正在生成"+start+"--->"+end+"的图片-------");
+            System.out.println("--------现在正在生成" + start + "--->" + end + "的图片-------");
             generateGraphImage(DotCommandBuilder.toString(), "src/pic/tmp_" + end);
             return trace.toString();
         }
@@ -154,7 +157,12 @@ public class DrawGraphic {
         List<String> nodes = g.GraphicNodes;
         for (String e : nodes) {
             if (!e.equals(start)) {
-                mixTrace.add(calcShortestPath(start, e));
+                String t = calcShortestPath(start, e);
+                if (t.equals("Fail to find the min source")) {
+                    continue;
+                } else {
+                    mixTrace.add(t);
+                }
             }
         }
         return mixTrace;
@@ -163,11 +171,11 @@ public class DrawGraphic {
     /**
      * 根据反向映射表pre构建start->target的路径，返回值是一个List<String>类型
      * 
-     * @param String             start 开始节点
+     * 
      * @param String             target 目标节点
      * @param Map<String,String>
      */
-    public List<String> findPreSource(String start, String target, Map<String, String> pre) {
+    public List<String> findPreSource(String target, Map<String, String> pre) {
 
         // 找到目标节点，回溯构建路径
         List<String> path = new ArrayList<>();
