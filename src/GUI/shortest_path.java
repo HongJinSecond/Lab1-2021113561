@@ -8,9 +8,14 @@ import src.Graph.DrawGraphic;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class shortest_path extends JFrame {
     JFrame mainFrame;
@@ -22,8 +27,8 @@ public class shortest_path extends JFrame {
         super(title);
         this.d = d;
 
-        //设置字体
-        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+        // 设置字体
+        Font font = new Font("Microsoft YaHei", Font.BOLD, 24);
 
         // 设置三个区域的Panel
         JPanel jPanel_NORTH = new JPanel();
@@ -47,7 +52,7 @@ public class shortest_path extends JFrame {
                     mainFrame.setVisible(true);
                 }
             });
-            jPanel.add(jButton1,BorderLayout.NORTH);
+            jPanel.add(jButton1, BorderLayout.NORTH);
             jPanel_NORTH.add(jPanel, BorderLayout.WEST);
         }
 
@@ -59,7 +64,7 @@ public class shortest_path extends JFrame {
         JTextField jTextField2 = new JTextField(20);
         jTextField1.setFont(font);
         jTextField2.setFont(font);
-        jTextField2.setPreferredSize(new Dimension(150,100));
+        jTextField2.setPreferredSize(new Dimension(150, 100));
         jPanel_CENTER.add(jTextField1, BorderLayout.WEST);
         jPanel_CENTER.add(jTextField2, BorderLayout.CENTER);
 
@@ -68,10 +73,8 @@ public class shortest_path extends JFrame {
         textLabel.setText(" ");
         textLabel.setText(this.result);
         textLabel.setFont(font);
-        System.out.println(this.result);
         jPanel_SOUTH.add(textLabel, BorderLayout.CENTER);
         jPanel_SOUTH.setPreferredSize(new Dimension(0, 100));
-        this.add(jPanel_SOUTH, "South");
 
         // 设置开始按钮
         JButton jButton = new JButton("Start Searching");
@@ -85,59 +88,99 @@ public class shortest_path extends JFrame {
                 System.out.println("结束节点为：" + end);
                 // 这里获取到开始节点与结束节点的信息了，调用获取结果存入result即可
 
-                shortest_path.this.result = start + "到" + end;
-                jTextField1.setText("");
-                jTextField2.setText("");
-                String result = d.findMinSource(start, end);
-                if (result.equals("success")) {
-                    try {
-                        BufferedImage originalImage = ImageIO.read(new File("src/tmp_s.jpg"));
-
-                        // 缩放图片尺寸为400*300
-                        int scaledWidth = 800;
-                        int scaledHeight = 600;
-                        BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight,
-                                BufferedImage.TYPE_INT_ARGB);
-                        Graphics2D g2d = scaledImage.createGraphics();
-                        g2d.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
-                        g2d.dispose();
-
-                        ImageIcon imageIcon = new ImageIcon(scaledImage);
-                        JLabel imgLabel = new JLabel(imageIcon);
-                        imgLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
-                        jPanel_NORTH.remove(1);
-                        jPanel_NORTH.add(imgLabel, BorderLayout.CENTER);
-                        shortest_path.this.add(jPanel_NORTH, BorderLayout.NORTH);
-                    } catch (IOException e2) {
-                        e2.printStackTrace();
+                // 如果end不为空
+                if (!Objects.equals(end, "")) {
+                    jTextField1.setText("");
+                    jTextField2.setText("");
+                    String result = d.calcShortestPath(start, end);
+                    if (!result.equals("Fail to find the min source")) {
+                        try {
+                            String name = result.split(":")[0].split(" ")[1];
+                            BufferedImage originalImage = ImageIO.read(new File("./src/pic/tmp_" + name + ".jpg"));
+                            ImageIcon imageIcon = new ImageIcon(originalImage);
+                            JLabel imgLabel = new JLabel(imageIcon);
+                            JScrollPane scrollPane = new JScrollPane(imgLabel);
+                            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                            scrollPane.setPreferredSize(new Dimension(800, 650));
+                            jPanel_NORTH.remove(1);
+                            jPanel_NORTH.add(scrollPane, BorderLayout.CENTER);
+                            shortest_path.this.add(jPanel_NORTH, BorderLayout.NORTH);
+                        } catch (IOException e2) {
+                            e2.printStackTrace();
+                        }
                     }
+                    textLabel.setText(result);
                 }
-                textLabel.setText(result);
+                // 如果end为空
+                else {
+                    textLabel.setText("");
+                    List<String> list_result = shortest_path.this.d.calcShortestPath(start);
+                    List<String> list_end = new ArrayList<>();
+                    for (String s : list_result) {
+                        list_end.add(s.split(":")[0].split(" ")[1]);
+                    }
+                    JComboBox<String> comboBox = new JComboBox<>();
+                    for (String string : list_end) {
+                        comboBox.addItem(string);
+                    }
+                    comboBox.setPreferredSize(new Dimension(80, 20));
+                    comboBox.addItemListener(new ItemListener() {
+                        @Override
+                        public void itemStateChanged(ItemEvent e) {
+                            if (e.getStateChange() == ItemEvent.SELECTED) {
+                                // 检查哪个选项被选中
+                                String selectedItem = (String) comboBox.getSelectedItem();
+                                System.out.println("Selected item: " + selectedItem);
+                                for (String i : list_result) {
+                                    if (i.contains(selectedItem)) {
+                                        textLabel.setText(i);
+                                        try {
+                                            BufferedImage originalImage = ImageIO
+                                                    .read(new File("./src/pic/tmp_" + selectedItem + ".jpg"));
+                                            ImageIcon imageIcon = new ImageIcon(originalImage);
+                                            JLabel imgLabel = new JLabel(imageIcon);
+                                            JScrollPane scrollPane = new JScrollPane(imgLabel);
+                                            scrollPane
+                                                    .setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                                            scrollPane.setHorizontalScrollBarPolicy(
+                                                    JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                                            scrollPane.setPreferredSize(new Dimension(800, 650));
+                                            jPanel_NORTH.remove(1);
+                                            jPanel_NORTH.add(scrollPane, BorderLayout.CENTER);
+                                            shortest_path.this.add(jPanel_NORTH, BorderLayout.NORTH);
+                                        } catch (IOException e2) {
+                                            e2.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    jPanel_SOUTH.add(comboBox, BorderLayout.WEST);
+                    jPanel_SOUTH.revalidate();
+                    jPanel_SOUTH.repaint();
+                }
             }
         });
         jPanel_CENTER.add(jButton, BorderLayout.EAST);
-        this.add(jPanel_CENTER, BorderLayout.CENTER);
 
         // 插入一张图片
         try {
-            BufferedImage originalImage = ImageIO.read(new File("src/tmp.jpg"));
-
-            // 缩放图片尺寸
-            int scaledWidth = 800;
-            int scaledHeight = 600;
-            BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = scaledImage.createGraphics();
-            g2d.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
-            g2d.dispose();
-
-            ImageIcon imageIcon = new ImageIcon(scaledImage);
+            BufferedImage originalImage = ImageIO.read(new File("./src/pic/tmp.jpg"));
+            ImageIcon imageIcon = new ImageIcon(originalImage);
             JLabel imgLabel2 = new JLabel(imageIcon);
-            imgLabel2.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
-            jPanel_NORTH.add(imgLabel2, BorderLayout.CENTER);
-            this.add(jPanel_NORTH, BorderLayout.NORTH);
+            JScrollPane scrollPane = new JScrollPane(imgLabel2);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollPane.setPreferredSize(new Dimension(800, 650));
+            jPanel_NORTH.add(scrollPane, BorderLayout.CENTER);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.add(jPanel_NORTH, BorderLayout.NORTH);
+        this.add(jPanel_SOUTH, BorderLayout.SOUTH);
+        this.add(jPanel_CENTER, BorderLayout.CENTER);
     }
 
     public void setPanel(JPanel panel) {

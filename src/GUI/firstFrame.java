@@ -20,8 +20,8 @@ public class firstFrame extends JFrame {
     public firstFrame() {
         super("firstFrame");
 
-        //设置字体
-        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+        // 设置字体
+        Font font = new Font("Microsoft YaHei", Font.BOLD, 24);
 
         JPanel jPanel_CENTER = new JPanel();
         JPanel jPanel_SOUTH = new JPanel();
@@ -63,7 +63,7 @@ public class firstFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         try {
-            BufferedImage originalImage = ImageIO.read(new File("src/logo.png"));
+            BufferedImage originalImage = ImageIO.read(new File("src/pic/logo.png"));
 
             // 缩放图片尺寸
             int scaledWidth = 800;
@@ -83,11 +83,10 @@ public class firstFrame extends JFrame {
         }
 
         // 稍微调整一下布局
-        jPanel_SOUTH.add(choosePathButton,BorderLayout.WEST);
-        jPanel_SOUTH.add(jButton,BorderLayout.EAST);
-        this.add(jPanel_SOUTH,BorderLayout.SOUTH);
-        this.add(jPanel_CENTER,BorderLayout.CENTER);
-
+        jPanel_SOUTH.add(choosePathButton, BorderLayout.WEST);
+        jPanel_SOUTH.add(jButton, BorderLayout.EAST);
+        this.add(jPanel_SOUTH, BorderLayout.SOUTH);
+        this.add(jPanel_CENTER, BorderLayout.CENTER);
 
     }
 

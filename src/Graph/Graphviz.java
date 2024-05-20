@@ -254,8 +254,8 @@ public class Graphviz {
      * @return A string to open a graph.
      */
     public String start_graph() {
-        return "digraph G {resolution=480;            //设置分辨率\r\n" + //
-                "dpi = 320;                 //设置分辨率" +
+        return "digraph G {resolution=280;            //设置分辨率\r\n" + //
+                "dpi = 200;                 //设置分辨率" +
                 " label=\"DiGraph\" ;";
 
     }

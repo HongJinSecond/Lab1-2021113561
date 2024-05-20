@@ -30,7 +30,6 @@ public class GUI {
         FirstFrame = new firstFrame();
         FirstFrame.setVisible(true);
         mainFrame.setVisible(false);
-        
 
         FirstFrame.jButton.addActionListener(new ActionListener() {
             @Override
@@ -46,8 +45,8 @@ public class GUI {
 
     public void init() {
 
-        //设置字体
-        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+        // 设置字体
+        Font font = new Font("Microsoft YaHei", Font.BOLD, 24);
 
         // 读取的文件路径为text_path
         // 获取核心绘图对象
@@ -132,20 +131,12 @@ public class GUI {
 
         // 插入一张图片
         try {
-            BufferedImage originalImage = ImageIO.read(new File("src/tmp.jpg"));
-
-            // 缩放图片尺寸为400*300
-            int scaledWidth = 800;
-            int scaledHeight = 600;
-            BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = scaledImage.createGraphics();
-            g2d.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
-            g2d.dispose();
-            ImageIcon imageIcon = new ImageIcon(scaledImage);
+            BufferedImage originalImage = ImageIO.read(new File("./src/pic/tmp.jpg"));
+            ImageIcon imageIcon = new ImageIcon(originalImage);
             JLabel imgLabel = new JLabel(imageIcon);
-            imgLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
             jPanel_center.add(imgLabel);
-            mainFrame.add(jPanel_center, BorderLayout.CENTER);
+            JScrollPane scrollPane = new JScrollPane(imgLabel);
+            mainFrame.add(scrollPane, BorderLayout.CENTER);
         } catch (IOException e) {
             e.printStackTrace();
         }

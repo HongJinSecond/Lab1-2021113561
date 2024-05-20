@@ -24,8 +24,8 @@ public class bridge_words extends JFrame {
         super(title);
         this.d = d;
 
-        //设置字体
-        Font font = new Font("Microsoft YaHei",Font.BOLD,24);
+        // 设置字体
+        Font font = new Font("Microsoft YaHei", Font.BOLD, 24);
 
         // 设置三个区域的Panel
         JPanel jPanel_NORTH = new JPanel();
@@ -49,7 +49,7 @@ public class bridge_words extends JFrame {
                     mainFrame.setVisible(true);
                 }
             });
-            jPanel.add(jButton,BorderLayout.NORTH);
+            jPanel.add(jButton, BorderLayout.NORTH);
             jPanel_NORTH.add(jPanel, BorderLayout.WEST);
             this.add(jPanel_NORTH, BorderLayout.NORTH);
         }
@@ -71,7 +71,6 @@ public class bridge_words extends JFrame {
         textLabel.setSize(80, 40);
         textLabel.setText(this.result);
         textLabel.setFont(font);
-        System.out.println(this.result);
         jPanel_SOUTH.setPreferredSize(new Dimension(0, 100));
         jPanel_SOUTH.add(textLabel, BorderLayout.CENTER);
 
@@ -90,7 +89,7 @@ public class bridge_words extends JFrame {
                 jTextField1.setText("");
                 jTextField2.setText("");
 
-                List<String> strings = d.findBridgeWords(start, end);
+                List<String> strings = d.queryBridgeWords(start, end);
                 StringBuilder builder = new StringBuilder();
                 if (strings.size() == 0) {
                     textLabel.setText(String.format("找不到%s和%s间的桥接词", start, end));
@@ -108,20 +107,14 @@ public class bridge_words extends JFrame {
 
         // 插入一张图片
         try {
-            BufferedImage originalImage = ImageIO.read(new File("src/tmp.jpg"));
-
-            // 缩放图片尺寸为400*300
-            int scaledWidth = 800;
-            int scaledHeight = 600;
-            BufferedImage scaledImage = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2d = scaledImage.createGraphics();
-            g2d.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
-            g2d.dispose();
-
-            ImageIcon imageIcon = new ImageIcon(scaledImage);
-            JLabel imgLabel = new JLabel(imageIcon);
-            imgLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
-            jPanel_NORTH.add(imgLabel, BorderLayout.CENTER);
+            BufferedImage originalImage = ImageIO.read(new File("./src/pic/tmp.jpg"));
+            ImageIcon imageIcon = new ImageIcon(originalImage);
+            JLabel imgLabel2 = new JLabel(imageIcon);
+            JScrollPane scrollPane = new JScrollPane(imgLabel2);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+            scrollPane.setPreferredSize(new Dimension(800, 650));
+            jPanel_NORTH.add(scrollPane, BorderLayout.CENTER);
         } catch (IOException e) {
             e.printStackTrace();
         }

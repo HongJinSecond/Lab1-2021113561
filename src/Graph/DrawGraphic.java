@@ -5,7 +5,7 @@
  * @email: 756547077@qq.com
  * @Date: 2024-05-13 12:32:55
  * @LastEditors: 陈左维2021113561
- * @LastEditTime: 2024-05-16 13:18:54
+ * @LastEditTime: 2024-05-17 13:04:46
  */
 package src.Graph;
 
@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -34,17 +35,27 @@ public class DrawGraphic {
             command = in.nextLine();
             switch (command) {
                 case "1":
-                    d.generateGraphImage(d.command, "src/tmp");
+                    d.generateGraphImage(d.command, "src/pic/tmp");
                     break;
                 case "2":
                     System.out.println("请输入开始符号和终结符号，用空格隔开");
                     String[] data = in.nextLine().split(" ");
-                    System.out.println(d.findMinSource(data[0], data[1]));
+                    if (data.length == 1) {
+                        List<String> outs = d.calcShortestPath(data[0]);
+                        for (String s : outs) {
+                            //获得关键词
+                            String target = s.split(":")[0].split(" ")[1];
+                            System.out.println("现在到"+target+"的路径是:\n"+s);
+                        }
+                    } else {
+                        System.out.println(d.calcShortestPath(data[0], data[1]));
+
+                    }
                     break;
                 case "3":
                     System.out.println("请输入开始符号和终结符号，用空格隔开");
                     String[] data2 = in.nextLine().split(" ");
-                    List<String> bridge = d.findBridgeWords(data2[0], data2[1]);
+                    List<String> bridge = d.queryBridgeWords(data2[0], data2[1]);
                     if (bridge.size() == 0) {
                         System.out.println("没有桥接词");
                     } else {
@@ -55,7 +66,7 @@ public class DrawGraphic {
                     break;
                 case "4":
                     System.out.println("请输入文本:");
-                    System.out.println("输出为:-->" + d.fixText(in.nextLine()));
+                    System.out.println("输出为:-->" + d.generateNewText(in.nextLine()));
                     break;
                 case "5":
                     System.out.println("输入n游走下一步，输入s保存数据，输入e退出随机游走");
@@ -101,7 +112,7 @@ public class DrawGraphic {
         g = new MyGraphic(pathFile);
         command = GenerateDotCommand();
         randomWalkTrace = new StringBuilder();
-        generateGraphImage(command, "src/tmp");
+        generateGraphImage(command, "src/pic/tmp");
     }
 
     /**
@@ -110,22 +121,60 @@ public class DrawGraphic {
      * @param {String} end 结束字符
      * @return String 方法执行提示语（成功或者失败）
      */
-    public String findMinSource(String start, String end) {
-        List<String> source = null;
-        source = g.findShortestPath(start, end);
-        if (source == null) {
+    public String calcShortestPath(String start, String end) {
+        Map<String, String> pre = g.calcShortestPath(start);
+
+        if (pre == null) {
             return "Fail to find the min source";
         } else {
+            List<String> source = findPreSource(start, end, pre);
+            StringBuilder trace = new StringBuilder();
+            trace.append("To "+end+":");
             StringBuilder DotCommandBuilder = new StringBuilder();
             String s = GenerateDotCommand();
             for (String e : source) {
-                System.out.println(e);
                 DotCommandBuilder.append(e + " [color=\"red\"];");
+                trace.append(e + "->");
             }
             DotCommandBuilder.append(s);
-            generateGraphImage(DotCommandBuilder.toString(), "src/tmp_s");
-            return "success";
+            System.out.println("--------现在正在生成"+start+"--->"+end+"的图片-------");
+            generateGraphImage(DotCommandBuilder.toString(), "src/pic/tmp_" + end);
+            return trace.toString();
         }
+    }
+
+    /**
+     * 选做：当只输入一个开始符号时，返回该符号到所有其他节点的值
+     * 
+     * @param start
+     * @return
+     */
+    public List<String> calcShortestPath(String start) {
+        List<String> mixTrace = new ArrayList<>();
+        List<String> nodes = g.GraphicNodes;
+        for (String e : nodes) {
+            if (!e.equals(start)) {
+                mixTrace.add(calcShortestPath(start, e));
+            }
+        }
+        return mixTrace;
+    }
+
+    /**
+     * 根据反向映射表pre构建start->target的路径，返回值是一个List<String>类型
+     * 
+     * @param String             start 开始节点
+     * @param String             target 目标节点
+     * @param Map<String,String>
+     */
+    public List<String> findPreSource(String start, String target, Map<String, String> pre) {
+
+        // 找到目标节点，回溯构建路径
+        List<String> path = new ArrayList<>();
+        for (String node = target; node != null; node = pre.get(node)) {
+            path.add(0, node); // 在列表开始处添加节点，以构建反向路径
+        }
+        return path;
     }
 
     /**
@@ -135,8 +184,8 @@ public class DrawGraphic {
      * @param String e 结束词
      * @return List<String> 桥接词列表
      */
-    public List<String> findBridgeWords(String s, String e) {
-        return g.findBridgeWorlds(s, e);
+    public List<String> queryBridgeWords(String s, String e) {
+        return g.queryBridgeWords(s, e);
     }
 
     /**
@@ -145,12 +194,12 @@ public class DrawGraphic {
      * @param String input 输入的句子
      * @return String 返回一个补全后的句子
      */
-    public String fixText(String input) {
+    public String generateNewText(String input) {
         String[] data = input.split("[^0-9a-zA-Z]+");
         StringBuilder output = new StringBuilder();
         int l = data.length;
         for (int i = 0; i < l - 1; i++) {
-            List<String> d = g.findBridgeWorlds(data[i], data[i + 1]);
+            List<String> d = g.queryBridgeWords(data[i], data[i + 1]);
             output.append(data[i] + " ");
             // 没有桥接词
             if (d.size() == 0) {
@@ -242,8 +291,18 @@ public class DrawGraphic {
         String outputImageType = "jpg";
         // 写入图到文件
         File out = new File(outputFileName + "." + outputImageType);
-        System.out.println(out.toPath());
         graphGenerator.writeGraphToFile(graphGenerator.getGraph(graphGenerator.getDotSource(), outputImageType), out);
     }
 
+    /**
+     * 展示某个有向图，（保存为JPG文件）
+     * 
+     * @param G
+     */
+    public void showDirectedGraph(MyGraphic G) {
+        this.g = G;
+        command = GenerateDotCommand();
+        randomWalkTrace = new StringBuilder();
+        generateGraphImage(command, "src/pic/tmp");
+    }
 }

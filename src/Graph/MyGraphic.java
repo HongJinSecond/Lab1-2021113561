@@ -6,7 +6,7 @@
  * @email: 756547077@qq.com
  * @Date: 2024-05-11 14:57:38
  * @LastEditors: 陈左维2021113561
- * @LastEditTime: 2024-05-14 19:21:55
+ * @LastEditTime: 2024-05-17 12:22:34
  */
 package src.Graph;
 
@@ -47,8 +47,11 @@ public class MyGraphic {
     private Map<String, GraphicEdge> map = new HashMap<>();
     // 这是随机游走的当前节点
     private String randomWalkNode = null;
+    // 获取所有节点的字符
+    public List<String> GraphicNodes = new ArrayList<>();
 
     public MyGraphic(String filePath) {
+        System.out.println("读入路径" + filePath);
         this.readData(filePath);
         // 初始化图结构
         for (Map.Entry<String, GraphicEdge> entry : this.map.entrySet()) {
@@ -58,6 +61,10 @@ public class MyGraphic {
             }
             // 将边添加到起始节点的边的集合中
             graph.get(startNode).add(entry.getValue());
+        }
+
+        for (Entry<String, Set<GraphicEdge>> e : graph.entrySet()) {
+            GraphicNodes.add(e.getKey());
         }
     }
 
@@ -134,11 +141,10 @@ public class MyGraphic {
      * @name:
      * @msg: 查找最短路径的算法
      * @param {String} source 初始节点
-     * @param {String} target 目标节点
-     * @return {List<String>} 返回一个包含全部路径字符的List，如果没有找到路径则返回空值
+     * @return {Map<String,String>} 返回一个回溯最短路径映射，其中键值配对为<节点x，节点x的前置节点>
      */
-    public List<String> findShortestPath(String source, String target) {
-        if (!graph.containsKey(source) || !graph.containsKey(target)) {
+    public Map<String, String> calcShortestPath(String source) {
+        if (!graph.containsKey(source)) {
             return null; // 源节点或目标节点不存在
         }
         // 初始化距离和上一个节点映射
@@ -154,15 +160,6 @@ public class MyGraphic {
         pq.add(source);
         while (!pq.isEmpty()) {
             String current = pq.poll();
-
-            if (current.equals(target)) {
-                // 找到目标节点，回溯构建路径
-                List<String> path = new ArrayList<>();
-                for (String node = target; node != null; node = previous.get(node)) {
-                    path.add(0, node); // 在列表开始处添加节点，以构建反向路径
-                }
-                return path;
-            }
             for (GraphicEdge edge : graph.get(current)) {
                 int newDistance = distance.get(current) + edge.getWeight();
                 // 异常捕获防止获取null时发生报错
@@ -179,8 +176,7 @@ public class MyGraphic {
                 }
             }
         }
-        // 如果找不到路径，返回null
-        return null;
+        return previous;
     }
 
     /**
@@ -242,7 +238,7 @@ public class MyGraphic {
      * @param {String} next 下一个词
      * @return {List<String>} 返回start->List<String>->next中的List<String>
      */
-    public List<String> findBridgeWorlds(String start, String next) {
+    public List<String> queryBridgeWords(String start, String next) {
         List<String> words = new ArrayList<>();
         // 没有找到对应的词(开始符号)
         if (!graph.containsKey(start)) {
