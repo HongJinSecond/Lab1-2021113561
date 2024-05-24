@@ -6,7 +6,7 @@
  * @email: 756547077@qq.com
  * @Date: 2024-05-11 14:57:38
  * @LastEditors: 陈左维2021113561
- * @LastEditTime: 2024-05-17 12:22:34
+ * @LastEditTime: 2024-05-24 09:01:07
  */
 package src.Graph;
 
@@ -63,6 +63,8 @@ public class MyGraphic {
             graph.get(startNode).add(entry.getValue());
         }
 
+        System.out.println(filePath);
+
         for (Entry<String, Set<GraphicEdge>> e : graph.entrySet()) {
             GraphicNodes.add(e.getKey());
         }
@@ -115,6 +117,7 @@ public class MyGraphic {
         for (int i = 0; i < len - 1; i++) {
             this.addEdge(data[i], data[i + 1]);
         }
+        this.addEdge(data[len-1], "nullnullnull");
     }
 
     /**

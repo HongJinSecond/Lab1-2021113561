@@ -5,7 +5,7 @@
  * @email: 756547077@qq.com
  * @Date: 2024-05-13 12:32:55
  * @LastEditors: 陈左维2021113561
- * @LastEditTime: 2024-05-17 13:04:46
+ * @LastEditTime: 2024-05-24 09:03:49
  */
 package src.Graph;
 
@@ -274,6 +274,9 @@ public class DrawGraphic {
         StringBuilder DotCommandBuilder = new StringBuilder();
         for (Map.Entry<String, GraphicEdge> entry : map.entrySet()) {
             GraphicEdge e = entry.getValue();
+            if (e.getEnd().equals("nullnullnull")) {
+                continue;
+            }
             DotCommandBuilder.append(e.getStart() + " -> " + e.getEnd() + " [label=\"" + e.getWeight() + "\"];");
         }
         String c = DotCommandBuilder.toString();
